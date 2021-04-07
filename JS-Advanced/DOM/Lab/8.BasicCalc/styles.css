@@ -1,0 +1,23 @@
+body {
+    text-align: center;
+    font-style: italic;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 20px;
+    text-transform: uppercase;
+    color: wheat;
+}
+#container {
+    position: relative;
+}
+
+form {
+    padding: 10px;
+    margin: 300px;
+    border: 3px solid red;
+    border-radius: 20px;
+    background-color: green;   
+}
+
+button {
+    border-radius: 10px;
+}
