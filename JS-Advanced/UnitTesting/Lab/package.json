@@ -1,0 +1,15 @@
+{
+  "name": "lab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "PlayingCard.js",
+  "scripts": {
+    "test": "myTests"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.0",
+    "mocha": "^8.3.0"
+  }
+}
