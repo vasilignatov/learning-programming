@@ -38,6 +38,7 @@ console.log(point1.x);
 point1.x = 3;
 point1.y = 4;
 console.log(point1.x);
+Ll
 
 const point2 = new Point(4, 5);
 console.log((Point.distance(point1, point2)));
