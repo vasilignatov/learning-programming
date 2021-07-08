@@ -1,57 +1,57 @@
 function solution() {
-    const [add, list, sent, discarded] = document.querySelectorAll('section');
-    const [input, addBtn] = add.querySelector('div').children;
-    const listUl = list.lastElementChild;
-    const sentUl = sent.lastElementChild;
-    const discardedUl = discarded.lastElementChild;
-
-    addBtn.addEventListener('click', addGift);
-
-
+    const [listUl, sentUl, discardedUl] = document.querySelectorAll('section ul');
+    const input = document.querySelector('input');
+    document.querySelector('button').addEventListener('click', addGift);
 
     function addGift() {
-        let giftName = input.value.trim();
+        let giftName = input.value;
+        input.value = '';
+        const li = e('li', giftName, 'gift');
 
-        if (giftName != '') {
-            input.value = '';
-            const li = e('li', giftName);
-            li.setAttribute('class', 'gift');
+        const sendBtn = e('button', 'Send', 'sendButton');
+        const discardBtn = e('button', 'Discard', 'discardButton');
 
-            const sendBtn = e('button', 'Send');
-            sendBtn.setAttribute('class', 'sendButton');
+        li.appendChild(sendBtn);
+        li.appendChild(discardBtn);
 
-            const discardBtn = e('button', 'Discard');
-            sendBtn.setAttribute('class', 'discardButton');
+        listUl.appendChild(li);
 
-            li.appendChild(sendBtn);
-            li.appendChild(discardBtn);
+        sendBtn.addEventListener('click', () => sendGifts(giftName, li));
+        discardBtn.addEventListener('click', () => discardGifts(giftName, li));
 
-            listUl.appendChild(li);
-
-            sortGifts();
-        }
+        sortGifts();
     }
 
     function sortGifts() {
-        const currentUl = Array.from(listUl)
-        currentUl.sort((a, b) => {
-            a.textContent.localeCompare(b.textContent);
-        })
-        currentUl.forEach(x => listUl.appendChild(x))
+        Array
+            .from(listUl.children)
+            .sort((a, b) => a.textContent.localeCompare(b.textContent))
+            .forEach(g => listUl.appendChild(g));
     }
 
-    function e(type, ...content) {
+    function sendGifts(name, gift) {
+        const liEl = e('li', name, 'gift');
+        sentUl.appendChild(liEl);
+        listUl.removeChild(gift);
+
+    }
+    function discardGifts(name, gift) {
+        const liEl = e('li', name, 'gift');
+        discardedUl.appendChild(liEl);
+        listUl.removeChild(gift);
+    }
+
+    function e(type, content, className) {
         const result = document.createElement(type);
 
-        content.forEach(e => {
-            if (typeof e == 'string') {
-                const node = document.createTextNode(e);
-                result.appendChild(node);
-            } else {
-                result.appendChild(e);
-            }
-        });
+        if (typeof content == 'string') {
+            result.textContent = content;
+        }
+
+        if (className) {
+            result.setAttribute('class', className)
+        }
 
         return result;
     }
-};
+};  
