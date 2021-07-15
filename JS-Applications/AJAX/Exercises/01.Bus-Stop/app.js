@@ -5,9 +5,25 @@ async function getInfo() {
     const url = 'http://localhost:3030/jsonstore/bus/businfo/' + id;
 
 
-    const responce = await fetch(url);
-    const data = await responce.json();
+    
+    try {
+        const ul = document.getElementById('buses')
+        ul.innerHTML = '';
+        
+        const responce = await fetch(url);
+        const data = await responce.json();
+        
+        document.getElementById('stopName') = data.name;
+        
+        Object.entries(data.buses).map(([bus, time]) => {
+            const liEl = document.createElement('li');
+            liEl.textContent = `Bus ${bus} arrives in ${time}`;
+            ul.appendChild(liEl);
+        })
+        stopId.value = '';
 
-    console.log(data);
+    } catch(err) {
+        stopName.textContent = 'Error'
+    }
 
 }

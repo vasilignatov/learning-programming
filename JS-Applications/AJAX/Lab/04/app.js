@@ -54,7 +54,6 @@ async function getRecipieDetails(id, preview) {
             data.steps.map(s => e('p', {}, s))
         )
     );
-    console.log(result);
     preview.replaceWith(result);
 
     function toggleCard() {
