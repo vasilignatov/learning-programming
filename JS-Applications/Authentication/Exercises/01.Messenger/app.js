@@ -29,5 +29,6 @@ async function sendMessage(message) {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(message)
+    })
 
 }
