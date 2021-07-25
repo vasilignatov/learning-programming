@@ -1,0 +1,1 @@
+document.querySelector('h3').textContent = 'Hello world!';
