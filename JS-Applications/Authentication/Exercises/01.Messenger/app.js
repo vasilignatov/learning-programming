@@ -3,17 +3,18 @@ function attachEvents() {
     document.getElementById('submit').addEventListener('click', async () => {
         const author = document.getElementsByName('author')[0].value;
         const content = document.getElementsByName('content')[0].value;
-
+        
+        if (author == '' || content == '') { return alert('All fields are required!') }
+        
         await sendMessage({ author, content });
 
-        document.getElementById('author').value = '';
-        document.getElementById('content').value = '';
+        document.querySelectorAll('input')[0].value = '';
+        document.querySelectorAll('input')[1].value = '';
     });
 
-    document.getElementById('refresh').addEventListener('click', getMessages)
-    setInterval(getMessages, 5000)
+    document.getElementById('refresh').addEventListener('click', getMessages);
+    setInterval(getMessages, 3000);
 }
-
 attachEvents();
 
 async function getMessages() {

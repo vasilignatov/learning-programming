@@ -7,44 +7,60 @@ attachEvents();
 
 async function getPhonebook() {
     const ul = document.getElementById('phonebook');
-
+    ul.innerHTML = '';
     const response = await fetch('http://localhost:3030/jsonstore/phonebook');
     const data = await response.json();
     Object
         .values(data)
-        .map(c => createLi)
-        .forEach(li => ul.appendChild(li));
+        .map(c => createLi(c))
+        .forEach(c => ul.appendChild(c));
 
-    function createLi() {
-        const li = document.createElement('li');
-        li.textContent = `${c.person}: ${c.phone}`;
-        const delBtn = document.createElement('button');
-        delBtn.textContent = 'Delete';
-        delBtn.id = c._id;
-        delBtn.addEventListener('click', deleteContact)
-        li.appendChild(delBtn);
-        return li;
-    }
+}
+
+function createLi(c) {
+    const liEl = document.createElement('li');
+    liEl.textContent = `${c.person}: ${c.phone}`;
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Delete';
+    delBtn.id = c._id;
+    delBtn.addEventListener('click', deleteContact)
+    liEl.appendChild(delBtn);
+    return liEl;
 }
 
 async function deleteContact(ev) {
     const id = ev.target.id;
-    await fetch('http://localhost:3030/jsonstore/phonebook/' + id, {
-        method: 'delete'
-    })
-    getPhonebook();
+    const conf = confirm('Are you sure to delete this contact?');
+    if(conf) {
+        await fetch('http://localhost:3030/jsonstore/phonebook/' + id, {
+            method: 'delete'
+        })
+        getPhonebook()
+    }
 }
 
 async function createContact() {
-    const contact = {
-        person: document.getElementById('person').values,
-        phone: document.getElementById('phone').value
-    }
+    const person = document.getElementById('person');
+    const phone = document.getElementById('phone');
 
-    await fetch('http://localhost:3030/jsonstore/phonebook', {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contact)
-    })
-    getPhonebook()
+    if (person.value != '' && phone.value != '') {
+        const contact = {
+            person: person.value,
+            phone: phone.value
+        }
+
+        await fetch('http://localhost:3030/jsonstore/phonebook', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(contact)
+        })
+        person.value = '';
+        phone.value = '';
+        getPhonebook()
+        return;
+    }
+    alert('Place write the empty input fields!');
 }
+
+
+
