@@ -1,18 +1,21 @@
-document.querySelector('form[action="/login"]').addEventListener('submit', onLoginSubmit);
+document.querySelector('form').addEventListener('submit', onRegisterSubmit);
 
-async function onLoginSubmit(event) {
+async function onRegisterSubmit(event) {
     event.preventDefault();
+
     const formData = new FormData(event.target);
     const email = formData.get('email');
     const password = formData.get('password');
+    const rePass = formData.get('rePass');
 
-    if(email == '' || password == '') return alert ('All fields are required!')
+    if(email == '' || password == '' || rePass == '') return alert ('All fields are required!')
+    if(password != rePass) return alert('Passwords don\'t match!');
 
-    await register(email, password);
+    register(email, password);
 }
 
-async function login(email, password) {
-    const responce = await fetch('http://localhost:3030/users/login', {
+async function register(email, password) {
+    const responce = await fetch('http://localhost:3030/users/register', {
         method: 'post',
         headers: { 'Content-Type': 'application-json' },
         body: JSON.stringify({ email, password })
@@ -23,7 +26,6 @@ async function login(email, password) {
         return alert(error.message);
     }
     const data = await responce.json();
-    console.log(data);
     sessionStorage.setItem('userToken', data.accessToken);
-    window.location.pathname = 'index.html';
+    window.location.pathname = 'index.html'
 }
