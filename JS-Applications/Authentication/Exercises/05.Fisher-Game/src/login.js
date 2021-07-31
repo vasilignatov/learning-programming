@@ -25,5 +25,6 @@ async function login(email, password) {
     const data = await responce.json();
     console.log(data);
     sessionStorage.setItem('userToken', data.accessToken);
+    sessionStorage.setItem('creatorId', data._id);
     window.location.pathname = 'index.html';
 }

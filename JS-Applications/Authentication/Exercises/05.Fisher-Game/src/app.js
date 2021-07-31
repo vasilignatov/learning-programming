@@ -1,15 +1,37 @@
-function attachEvents() {
-
-    const token = sessionStorage.getItem('userToken');
+async function attachEvents() {
+    const form = document.querySelector('#addForm');
+    const addBtn = document.getElementById('submit');
     const logoutBtn = document.getElementById('logout');
     const loginBtn = document.getElementById('guest');
-    document.querySelector('aside>button').addEventListener('click', listAllCatches);
+
+    const token = sessionStorage.getItem('userToken');
+
+    // await loadAllCatches()
+    document.querySelector('aside>button').addEventListener('click', await loadAllCatches());
 
 
     if (token) {
+        const creatorId = sessionStorage.getItem('creatorId');
         logoutBtn.style.display = 'inline-block';
         loginBtn.style.display = 'none';
+        addBtn.disabled = false;
+
         logoutBtn.addEventListener('click', logout);
+        form.addEventListener('submit', createNewCatch);
+
+        if (creatorId) {
+            const catches = document.querySelectorAll('.catch');
+            Array.from(catches).forEach(div => {
+                if (div.dataset.creator == creatorId) {
+                    let id = div.id;
+                    const btns = document.getElementById(id).querySelectorAll('button');
+                    btns.forEach(x => {
+                        x.disabled = false;
+                        x.addEventListener('click', createOrDeleteHandler)
+                    })
+                }
+            })
+        }
 
     } else {
         logoutBtn.style.display = 'none'
@@ -18,46 +40,38 @@ function attachEvents() {
 
 }
 attachEvents();
-/*
-    Update -> send put request and update data
-    Delete -> delete the catch from database and page
-*/
-
 
 async function logout() {
     const token = sessionStorage.getItem('userToken');
     const response = await fetch('http://localhost:3030/users/logout', {
         method: 'get',
-        headers: {
-            'Content-Type': 'application-json',
-            'X-Authorization': token
-        }
+        headers: { 'X-Authorization': token }
     });
-
-    if (response.ok) {
+    if (!response.ok) {
         const error = await response.json();
         return alert(error.message);
     }
-    sessionStorage.removeItem('userToken');
+    sessionStorage.clear();
+
+    window.location.pathname = 'index.html';
 
 }
 
-async function listAllCatches() {
-    const catches = document.getElementById('catches');
-    catches.innerHTML = '';
+async function loadAllCatches() {
     const response = await fetch('http://localhost:3030/data/catches');
     if (!response.ok) {
         const err = await response.json();
         return alert(err.message);
     }
     const allCatchesData = await response.json();
-    allCatchesData.map(createCatch).forEach(c => catches.innerHTML += c);
+
+    document.getElementById('catches').innerHTML = allCatchesData.map(createCatch);
 
 }
 
 function createCatch(_catch) {
     return `
-    <div class="catch" id="${_catch._id} data-creator="${_catch._ownerId}">
+    <div class="catch" id="${_catch._id}" data-creator="${_catch._ownerId}">
         <label>Angler</label>
         <input type="text" class="angler" value="${_catch.angler}" />
         <hr>
@@ -81,31 +95,80 @@ function createCatch(_catch) {
     </div>`;
 }
 
-async function createNewCatch(newCatch) {
+async function createNewCatch(event) {
+
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = {
+        angler: formData.get('angler'),
+        weight: formData.get('weight'),
+        species: formData.get('species'),
+        location: formData.get('location'),
+        bait: formData.get('bait'),
+        captureTime: formData.get('captureTime')
+    }
+
+    if (data.angler == '' || data.weight == '' || data.species == '' || data.location == '' ||
+        data.bait == '' || data.captureTime == '') {
+        return alert('All fields are required!');
+    }
+
     await fetch('http://localhost:3030/data/catches', {
         method: 'post',
-        headers: { 'Content-Type': 'application-json' },
-        body: JSON.stringify(newCatch)
+        headers: {
+            'Content-Type': 'application-json',
+            'X-Authorization': sessionStorage.getItem('userToken')
+        },
+        body: JSON.stringify(data)
     });
-}
-
-async function updateCatchBy(newCatch) {
-    await fetch('http://localhost:3030/data/catches', {
-        method: 'put',
-        headers: { 'Content-Type': 'application-json' },
-        body: JSON.stringify(newCatch)
-    });
+    event.target.reset();
 }
 
 async function deleteCatchById(id) {
-    const responce = await fetch('http://localhost:3030/data/catches/' + id, {
-        method: 'delete'
+    await fetch('http://localhost:3030/data/catches/' + id, {
+        method: 'delete',
+        headers: { 'X-Authorization': sessionStorage.getItem('userToken') }
     });
+
 }
 
-function e(type, attributes, content) {
-    const result = document.createElement(type);
-    if (attributes) { Object.entries(attributes).forEach(([k, v]) => result.setAtributes(k, v)) }
-    if (text) { result.textContent = content }
-    return result;
+async function updateCatchBy(id, data) {
+    try {
+        await fetch('http://localhost:3030/data/catche/' + id, {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application-json',
+                'X-Authorization': sessionStorage.getItem('userToken')
+            },
+            body: JSON.stringify(data)
+        });
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+
+async function createOrDeleteHandler(ev) {
+    ev.preventDefault();
+
+    const target = ev.target;
+    const div = target.parentNode;
+    const id = div.id;
+
+    if (target.className == 'update') {
+
+        const data = {
+            angler: div.querySelector('.angler').value,
+            weight: div.querySelector('.weight').value,
+            species: div.querySelector('.species').value,
+            location: div.querySelector('.location').value,
+            bait: div.querySelector('.bait').value,
+            captureTime: div.querySelector('.captureTime').value
+        }
+        await updateCatchBy(id, data);
+    } else if (target.className = 'delete') {
+        await deleteCatchById(id);
+        await loadAllCatches();
+    }
 }
