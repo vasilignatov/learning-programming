@@ -39,6 +39,19 @@ function setupSection(sectionId, setup) {
 }
 
 function setupNavigation() {
+
+    const email = sessionStorage.getItem('email');
+
+    if(email) {
+        document.getElementById('welcome-msg').textContent = `Welcome, ${email}`
+        Array.from(document.querySelectorAll('nav .user')).forEach(l => l.style.display = 'block');
+        Array.from(document.querySelectorAll('nav .guest')).forEach(l => l.style.display = 'none');
+    } else {
+        Array.from(document.querySelectorAll('nav .user')).forEach(l => l.style.display = 'none');
+        Array.from(document.querySelectorAll('nav .guest')).forEach(l => l.style.display = 'block');
+    }
+
+
     document.querySelector('nav').addEventListener('click', (event) => {
         if (event.target.tagName == 'A') {
             const view = links[event.target.id];
