@@ -1,50 +1,52 @@
-import { showHome } from './home.js'
+import { showHome } from './home.js';
 
+export async function onSubmit(event) {
+    event.preventDefault();
 
-async function onSubmit(ev) {
-    ev.preventDefault();
-    const formData = new FormData(ev.target);
+    const formData = new FormData(event.target);
+
     const email = formData.get('email');
     const password = formData.get('password');
-    
-    const responce = await fetch('http://localhost:3030/users/login', {
-        method: 'post',
+
+    const response = await fetch('http://localhost:3030/users/login', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     });
-    
-    if (responce.ok) {
+
+    if (response.ok) {
         event.target.reset();
-        const data = await responce.json();
+
+        const data = await response.json();
+
         sessionStorage.setItem('authToken', data.accessToken);
         sessionStorage.setItem('userId', data._id);
         sessionStorage.setItem('email', data.email);
 
-        document.getElementById('welcome-msg').textContent = `Welcome, ${email}`;
+        document.getElementById('welcome-msg').textContent = `Welcome ${email}`;
+        [...document.querySelectorAll('nav .user')].forEach(l => l.style.display = 'block');
+        [...document.querySelectorAll('nav .quest')].forEach(l => l.style.display = 'none');
 
-        Array.from(document.querySelectorAll('nav .user')).forEach(l => l.style.display = 'block');
-        Array.from(document.querySelectorAll('nav .guest')).forEach(l => l.style.display = 'none');
         showHome();
+
     } else {
-        const err = await responce.json();
-        alert(err.message);
+        const error = await response.json();
+        alert(error.message);
     }
-    
 }
 
 let main;
 let section;
 
-export function setupLogin(mainTarget, sectionTarget) {
+export async function setupLogin(mainTarget, sectionTarget) {
     main = mainTarget;
     section = sectionTarget;
 
     const form = section.querySelector('form');
-
-    form.addEventListener('submit', onSubmit );
+    form.addEventListener('submit', onSubmit);
 }
 
 export async function showLogin() {
-        main.innerHTML = '';
-        main.appendChild(section)
-    }
+    main.innerHTML = '';
+    main.appendChild(section);
+}
