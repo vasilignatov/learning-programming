@@ -1,0 +1,17 @@
+{
+  "name": "js-back-end",
+  "version": "1.0.0",
+  "description": "asdf",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./server.js",
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "dependencies": {
+    "http": "0.0.1-security",
+    "nodemon": "^2.0.12"
+  }
+}

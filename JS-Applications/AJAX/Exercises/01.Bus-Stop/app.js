@@ -4,26 +4,20 @@ async function getInfo() {
     const id = stopId.value;
     const url = 'http://localhost:3030/jsonstore/bus/businfo/' + id;
 
-
-    
     try {
-        const ul = document.getElementById('buses')
-        ul.innerHTML = '';
-        
+        const ul = document.getElementById('buses');
+        ul.textContent = 'Loading...'
         const responce = await fetch(url);
         const data = await responce.json();
-        
-        document.getElementById('stopName') = data.name;
-        
-        Object.entries(data.buses).map(([bus, time]) => {
-            const liEl = document.createElement('li');
-            liEl.textContent = `Bus ${bus} arrives in ${time}`;
-            ul.appendChild(liEl);
+        ul.textContent = '';
+        document.getElementById('stopName').textContent = data.name;
+        Object.entries(data.buses).forEach(([busId, time]) => {
+            const li = document.createElement('li');
+            li.textContent = `Bus ${busId} arrives in ${time}`;
+            ul.appendChild(li);
         })
-        stopId.value = '';
-
-    } catch(err) {
-        stopName.textContent = 'Error'
+    } catch (err) {
+        stopName.textContent = 'Error';
     }
 
 }
