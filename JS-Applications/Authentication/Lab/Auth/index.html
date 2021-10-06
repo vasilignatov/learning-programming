@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        label {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -22,7 +27,14 @@
     <form method="POST" id="loginForm">
         <label> Email: <input type="text" name="email"></label>
         <label> Password: <input type="password" name="password"></label>
-        <input type="submit" value="Register">
+        <input type="submit" value="Log In">
+    </form>
+
+    <h2>Create</h2>
+    <form method="POST" id="createForm">
+        <label> Name: <input type="text" name="name"></label>
+        <label> Value: <input type="text" name="val"></label>
+        <input type="submit" value="Post">
     </form>
 
     <script>
@@ -35,14 +47,15 @@
             const repass = formData.get('repass');
             console.log();
 
-            if(email == '' && password == '') {
+            if (email == '' && password == '') {
                 return alert('All fields are required!');
-            } else if(password != repass){
+            } else if (password != repass) {
                 return alert('Passwords don\`t mach!');
             }
             register(email, password)
 
         })
+
         document.getElementById('loginForm').addEventListener('submit', (ev) => {
             ev.preventDefault();
             const formData = new FormData(ev.target);
@@ -50,11 +63,20 @@
             const email = formData.get('email');
             const password = formData.get('password');
 
-            login(email, password)
+            login(email, password);
 
         })
+        document.getElementById('createForm').addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+            const formData = new FormData(ev.target);
 
-        
+            const name = formData.get('name');
+            const val = formData.get('val');
+
+            const result = await postData({ name, val });
+            console.log(result);
+        })
+
 
         async function register(email, password) {
             const responce = await fetch('http://localhost:3030/users/register', {
@@ -73,7 +95,7 @@
             }
         }
 
-        
+
         async function login(email, password) {
             const responce = await fetch('http://localhost:3030/users/login', {
                 method: 'POST',
@@ -102,8 +124,28 @@
             if (token) { options.headers['X-Authorization'] = token }
             const responce = await fetch('http://localhost:3030/users/register', options)
             return await responce.json();
-            
+
         }
+
+
+        async function postData(data) {
+            const options = {
+                method: 'post',
+                headers: {},
+                body: JSON.stringify(data)
+            }
+
+            const token = sessionStorage.getItem('authToken');
+            if (token !== null) {
+                options.headers['X-Authorization'] = token;
+            }
+
+            const responce = await fetch('http://localhost:3030/data/records', options);
+
+            return await responce.json();
+        }
+
+
     </script>
 </body>
 

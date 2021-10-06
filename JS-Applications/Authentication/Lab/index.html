@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <form id="articleForm">
+        <input type="text" name="title">
+        <textarea name="content"></textarea>
+        <input type="submit" value="Publish">
+    </form>
+
+    <script>
+        const form = document.getElementById('articleForm');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            new FormData(form)
+
+            // const title = form.querySelector('[name="title"]').value;
+            // const content = form.querySelector('[name="content"]').value;
+
+            // let article = {title, content};
+            // console.log(article);
+            // postData(article)
+        });
+
+        form.addEventListener('formdata', event => {
+
+        })
+
+        async function getData() {
+            const responce = await fetch('http://localhost:3030/jsonstore/advanced/articles/details');
+
+            const data = await responce.json();
+
+            return data;
+        }
+
+        async function getDataById(id) {
+            const responce = await fetch('http://localhost:3030/jsonstore/advanced/articles/details/' + id);
+
+            const data = await responce.json();
+
+            return data;
+        }
+
+        async function postData(data) {
+            const responce = await fetch('http://localhost:3030/jsonstore/advanced/articles/details', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+
+            const result = await responce.json();
+            console.log(result);
+        }
+
+        async function updateData(id, data) {
+            const responce = await fetch('http://localhost:3030/jsonstore/advanced/articles/details/' + id, {
+                method: 'put',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
+        async function deleteData(id) {
+            const responce = await fetch('http://localhost:3030/jsonstore/advanced/articles/details/' + id, {
+                method: 'delete',
+            });
+        }
+    </script>
+</body>
+
+</html>
