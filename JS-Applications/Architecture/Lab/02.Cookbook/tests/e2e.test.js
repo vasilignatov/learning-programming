@@ -148,12 +148,23 @@ describe('E2E tests', function () {
                 steps: ['4', '5']
             }
 
+            // fill all input fields
             await page.fill('[name="name"]', data.name);
             await page.fill('[name="img"]', data.img);
             await page.fill('[name="ingredients"]', data.ingredients.join('\n'));
             await page.fill('[name="steps"]', data.ingredients.join('\n'));
 
+            const [request] = await Promise.all([
+                page.waitForRequest(request =>request.url().includes('/data/recipes') && request.method() == 'POST'),
+                page.click('[type="submit"]')
+            ])
 
+            const requestData = JSON.parse(request.postData());
+            expect(requestData.name).to.be.equal(data.name);
+            expect(requestData.img).to.be.equal(data.img);
+            expect(requestData.ingredients).to.deep.equal(data.ingredients);
+            expect(requestData.steps).to.deep.equal(data.steps);
+            
         })
 
 
