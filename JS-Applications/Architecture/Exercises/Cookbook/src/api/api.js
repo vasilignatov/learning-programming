@@ -4,7 +4,6 @@ export const settings = {
 
 async function request(url, options) {
     const response = await fetch(url, options);
-
     if (!response.ok) {
         const error = await response.json();
         alert(error.message)
@@ -41,13 +40,15 @@ function createOptions(method = 'get', data) {
 export async function get(url) {
     return request(url, createOptions())
 }
+
 export async function post(url, data) {
     return request(url, createOptions('post', data))
-
 }
+
 export async function put(url, data) {
     return request(url, createOptions('put', data))
 }
+
 export async function del(url) {
     return request(url, createOptions('delete'))
 }

@@ -26,18 +26,15 @@ export function createNavigation(main, nav) {
 
     async function goTo(name, ...params) {
         const linkId = Object.entries(links).find(([k, v]) => v == name) || [];
-    
         setActiveNav(linkId[0])
 
         main.innerHTML = '';
         const section = await views[name](...params);
-        console.log(section);
         main.appendChild(section);
     }
 
     function registerView(name, section, setup, navId) {    // recive name, section call setup func and set the view 
-        const view = setup(section, navigation)
-
+        const view = setup(section, navigation);
         views[name] = view;
         if (navId) {
             links[navId] = name;
