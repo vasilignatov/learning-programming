@@ -1,7 +1,6 @@
 import { createRecipe } from '../api/data.js';
 
-export async function setupCreate(section, navigation) {
-
+export function setupCreate(section, nav) {
     const form = section.querySelector('form');
 
     form.addEventListener('submit', (ev => {
@@ -12,6 +11,10 @@ export async function setupCreate(section, navigation) {
 
     return showCreate;
 
+    function showCreate() {
+        return section;
+    }
+
     async function onSubmit(data) {
         const body = {
             name: data.name,
@@ -20,11 +23,12 @@ export async function setupCreate(section, navigation) {
             steps: data.steps.split('\n').map(l => l.trim()).filter(l => l != '')
         };
 
-        const result = await createRecipe(body);
-        navigation.goTo('details', result._id)
-    }
-
-    function showCreate() {
-        return section;
+        try {
+            const result = await createRecipe(body);
+            nav.goTo('details', result._id);
+        } catch (err) {
+            alert(err.message);
+        }
     }
 }
+

@@ -1,6 +1,7 @@
-import { login } from '../api/data.js'
+import { login } from '../api/data.js';
 
-export function setupLogin(section, navigation) {
+
+export function setupLogin(section, nav) {
     const form = section.querySelector('form');
 
     form.addEventListener('submit', (ev => {
@@ -9,18 +10,20 @@ export function setupLogin(section, navigation) {
         onSubmit([...formData.entries()].reduce((p, [k, v]) => Object.assign(p, { [k]: v }), {}));
     }));
 
-    async function onSubmit(data) {
-        await login(data.email, data.password);
-
-        document.getElementById('user').style.display = 'inline-block';
-        document.getElementById('guest').style.display = 'none';
-
-        navigation.goTo('catalog')
-    }
-
     return showLogin;
 
     function showLogin() {
         return section;
+    }
+
+    async function onSubmit(data) {
+        try {
+            console.log('logging in');
+            await login(data.email, data.password);
+            nav.setUserNav();
+            nav.goTo('catalog');
+        } catch (err) {
+            alert(err.message);
+        }
     }
 }

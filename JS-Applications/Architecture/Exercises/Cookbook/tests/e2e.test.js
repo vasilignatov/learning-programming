@@ -35,8 +35,8 @@ describe('E2E tests', function () {
     this.timeout(6000);
 
     before(async () => {
-        browser = await chromium.launch({ headless: false, slowMo: 500 });
-        // browser = await chromium.launch();
+        // browser = await chromium.launch({ headless: false, slowMo: 500 });
+        browser = await chromium.launch();
     });
 
     after(async () => {
@@ -48,11 +48,11 @@ describe('E2E tests', function () {
 
         // block intensive resources and external calls (page routes take precedence)
         await context.route('**/*.{png,jpg,jpeg}', route => route.abort());
-        /*
+		/*
         await context.route(url => {
             return url.hostname != 'localhost';
         }, route => route.abort());
-        */
+		*/
         await context.route('**' + endpoints.count, route => route.fulfill(json(3)));
 
         page = await context.newPage();
@@ -214,7 +214,6 @@ describe('E2E tests', function () {
             ]);
 
             const postData = JSON.parse(response.request().postData());
-
             expect(postData.name).to.equal(mock.name);
             expect(postData.img).to.equal(mock.img);
             expect(postData.ingredients).to.deep.equal(mock.ingredients);
@@ -222,7 +221,7 @@ describe('E2E tests', function () {
         });
 
         it('author sees edit and delete buttons', async () => {
-            page.route('**' + endpoints.recipes, route => route.fulfill(json([mock])));
+            page.route('**' + endpoints.recent, route => route.fulfill(json([mock])));
             const mock = {
                 name: 'Name1',
                 img: '/assests/new.png',
@@ -251,7 +250,7 @@ describe('E2E tests', function () {
         });
 
         it('edit loads correct article data for logged in user', async () => {
-            page.route('**' + endpoints.recipes, route => route.fulfill(json([mock])));
+            page.route('**' + endpoints.recent, route => route.fulfill(json([mock])));
             const mock = {
                 name: 'Name1',
                 img: '/assests/new.png',
@@ -280,7 +279,7 @@ describe('E2E tests', function () {
         });
 
         it('edit makes correct API call for logged in user', async () => {
-            page.route('**' + endpoints.recipes, route => route.fulfill(json([mock])));
+            page.route('**' + endpoints.recent, route => route.fulfill(json([mock])));
             const mock = {
                 name: 'Name1',
                 img: '/assests/new.png',
@@ -314,7 +313,7 @@ describe('E2E tests', function () {
         });
 
         it('delete makes correct API call for logged in user', async () => {
-            page.route('**' + endpoints.recipes, route => route.fulfill(json([mock])));
+            page.route('**' + endpoints.recent, route => route.fulfill(json([mock])));
             const mock = {
                 name: 'Name1',
                 img: '/assests/new.png',

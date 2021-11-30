@@ -1,84 +1,126 @@
-export const settings = {
-    host: ''
-}
+export default function createApi(beginRequest, endRequest) {
+    const endpoints = {
+        REGISTER: 'users/register',
+        LOGIN: 'users/login',
+        LOGOUT: 'users/logout'
+    };
 
-async function request(url, options) {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-        const error = await response.json();
-        alert(error.message)
-        throw new Error(error.message);
-    }
+    return {
+        beginRequest() {
+            if (typeof beginRequest == 'function') {
+                beginRequest();
+            }
+        },
 
-    try {
-        return await response.json();
-    } catch (err) {
-        return response;
-    }
-}
+        endRequest() {
+            if (typeof endRequest == 'function') {
+                endRequest();
+            }
+        },
 
-function createOptions(method = 'get', data) {
-    const result = {
-        method,
-        headers: {}
-    }
+        host(endpoint) {
+            return `http://localhost:3030/${endpoint}`;
+        },
 
-    if (data) {
-        result.method['Content-Type'] = 'application/json';
-        result.body = JSON.stringify(data);
-    }
+        getOptions(headers) {
+            const token = sessionStorage.getItem('userToken');
 
-    const token = sessionStorage.getItem('authToken');
+            const options = { headers: headers || {} };
 
-    if (token) {
-        result.headers['X-Authorization'] = token;
-    }
+            if (token !== null) {
+                Object.assign(options.headers, { 'X-Authorization': token });
+            }
 
-    return result;
-}
+            return options;
+        },
 
-export async function get(url) {
-    return request(url, createOptions())
-}
+        async request(endpoint, options) {
+            let response;
 
-export async function post(url, data) {
-    return request(url, createOptions('post', data))
-}
+            this.beginRequest();
+            try {
+                response = await fetch(endpoint, options);
 
-export async function put(url, data) {
-    return request(url, createOptions('put', data))
-}
+                if (response.status == 200) {
+                    return await response.json();
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message);
+                }
+            } catch (err) {
+                if (err instanceof SyntaxError) {
+                    return response;
+                } else if(err.message == 'Invalid access token') {
+                    console.log('Invalid session, resetting storage');
+                    sessionStorage.clear();
+                    window.location.pathname = '/';
+                } else {
+                    throw err;
+                }
+            } finally {
+                this.endRequest();
+            }
+        },
 
-export async function del(url) {
-    return request(url, createOptions('delete'))
-}
+        async get(endpoint) {
+            return this.request(this.host(endpoint), this.getOptions());
+        },
 
+        async post(endpoint, body) {
+            const options = this.getOptions({ 'Content-Type': 'application/json' });
+            options.method = 'POST';
+            options.body = JSON.stringify(body);
 
-export async function login(email, password) {
-    const response = await post(settings.host + '/users/login', { email, password });
+            return this.request(this.host(endpoint), options);
+        },
 
-    sessionStorage.setItem('authToken', response.accessToken);
-    sessionStorage.setItem('email', response.email);
-    sessionStorage.setItem('userId', response._id);
+        async put(endpoint, body) {
+            const options = this.getOptions({ 'Content-Type': 'application/json' });
+            options.method = 'PUT';
+            options.body = JSON.stringify(body);
 
-    return response;
-}
+            return this.request(this.host(endpoint), options);
+        },
 
-export async function register(email, password) {
-    const response = await post(settings.host + '/users/login', { email, password });
+        async delete(endpoint) {
+            const options = this.getOptions();
+            options.method = 'DELETE';
 
-    sessionStorage.setItem('authToken', response.accessToken);
-    sessionStorage.setItem('email', response.email);
-    sessionStorage.setItem('userId', response._id);
+            return this.request(this.host(endpoint), options);
+        },
 
-    return response;
-}
+        async register(email, password) {
+            const result = await this.post(endpoints.REGISTER, {
+                email,
+                password
+            });
 
-export async function logout() {
-    const response = await get(settings.host + '/users/logout');
+            sessionStorage.setItem('userToken', result['accessToken']);
+            sessionStorage.setItem('email', result.email);
+            sessionStorage.setItem('userId', result._id);
 
-    sessionStorage.removeItem('authToken');
-    sessionStorage.removeItem('email');
-    sessionStorage.removeItem('userId');
+            return result;
+        },
 
-}
+        async login(email, password) {
+            const result = await this.post(endpoints.LOGIN, {
+                email,
+                password
+            });
+
+            sessionStorage.setItem('userToken', result['accessToken']);
+            sessionStorage.setItem('email', result.email);
+            sessionStorage.setItem('userId', result._id);
+
+            return result;
+        },
+
+        async logout() {
+            const result = await this.get(endpoints.LOGOUT);
+            sessionStorage.removeItem('userToken');
+            sessionStorage.removeItem('email');
+            sessionStorage.removeItem('userId');
+            return result;
+        }
+    };
+};

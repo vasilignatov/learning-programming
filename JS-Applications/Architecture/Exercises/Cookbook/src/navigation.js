@@ -1,67 +1,52 @@
-// initialize links 
-// setup evet listeners
-// updatw active link
-// render view
-// keep assocciation between links and views
-
-// export :
-//  - goTo - update active link; render view 
-//  - setUserNav
-//  - registerView
-
-export function createNavigation(main, nav) {
-
+export function createNav(main, navbar) {
     const views = {};
     const links = {};
 
-    setupNavigation();              // add event listeners to links and set user nav
+    setupNavigation();
 
-    const navigation = {
-        setUserNav,
+    const navigator = {
         registerView,
-        goTo
+        goTo,
+        setUserNav
     };
 
-    return navigation;
+    return navigator;
 
-    async function goTo(name, ...params) {
-        const linkId = Object.entries(links).find(([k, v]) => v == name) || [];
-        setActiveNav(linkId[0])
-
-        main.innerHTML = '';
-        const section = await views[name](...params);
-        main.appendChild(section);
-    }
-
-    function registerView(name, section, setup, navId) {    // recive name, section call setup func and set the view 
-        const view = setup(section, navigation);
-        views[name] = view;
-        if (navId) {
-            links[navId] = name;
-        }
-    }
-
-    function setupNavigation() {      // add event listener to nav, handle 
-        setUserNav();
-
-        nav.addEventListener('click', (ev) => {
+    function setupNavigation() {
+        navbar.addEventListener('click', (ev) => {
             if (ev.target.tagName == 'A') {
-                const viewName = links[ev.target.id];
-                if (viewName) {
+                const handlerName = links[ev.target.id];
+                if (handlerName) {
                     ev.preventDefault();
-                    goTo(viewName)
+                    goTo(handlerName);
                 }
             }
         });
     }
 
-    function setActiveNav(targetId) {  // change color of the active button
-        [...nav.querySelectorAll('a')].forEach(a => (targetId && a.id == targetId) ? a.classList.add('active') : a.classList.remove('active'));
+    async function goTo(name, ...params) {
+        main.innerHTML = '';
+        const result = await views[name](...params);
+        main.appendChild(result);
     }
- 
 
-    function setUserNav() {            // set user navigation
-        if (sessionStorage.getItem('authToken') != null) {
+    function registerView(name, section, setup, navId) {
+        const execute = setup(section, navigator);
+
+        views[name] = (...params) => {
+            [...navbar.querySelectorAll('a')].forEach(a => a.classList.remove('active'));
+            if (navId) {
+                navbar.querySelector('#' + navId).classList.add('active');
+            }
+            return execute(...params);
+        };
+        if (navId) {
+            links[navId] = name;
+        }
+    }
+
+    function setUserNav() {
+        if (sessionStorage.getItem('userToken') != null) {
             document.getElementById('user').style.display = 'inline-block';
             document.getElementById('guest').style.display = 'none';
         } else {
@@ -70,3 +55,4 @@ export function createNavigation(main, nav) {
         }
     }
 }
+

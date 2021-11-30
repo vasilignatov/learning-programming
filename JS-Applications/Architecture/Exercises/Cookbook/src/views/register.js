@@ -1,8 +1,7 @@
+import { regster } from '../api/data.js';
 
-import {register} from '../api/data.js';
 
-export function setupRegister(section, navigation) {
-  
+export function setupRegister(section, nav) {
     const form = section.querySelector('form');
 
     form.addEventListener('submit', (ev => {
@@ -11,23 +10,23 @@ export function setupRegister(section, navigation) {
         onSubmit([...formData.entries()].reduce((p, [k, v]) => Object.assign(p, { [k]: v }), {}));
     }));
 
-    async function onSubmit(data) {
-        if (data.password != data.rePass) {
-            return alert('Passwords don\'t match');
-        }
-        
-        await register(data.email, data.password)
-
-        document.getElementById('user').style.display = 'inline-block';
-        document.getElementById('guest').style.display = 'none';
-
-        navigation.goTo('catalog');
-    }
-
     return showRegister;
 
     function showRegister() {
         return section;
     }
-}
 
+    async function onSubmit(data) {
+        if (data.password != data.rePass) {
+            return alert('Passwords don\'t match');
+        }
+
+        try {
+            await regster(data.email, data.password);
+            nav.setUserNav();
+            nav.goTo('catalog');
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+}

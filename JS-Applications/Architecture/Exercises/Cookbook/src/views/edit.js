@@ -1,8 +1,8 @@
-import { getRecipeById, eidtRecipe } from '../api/data.js'
+import { getRecipeById, editRecipe } from '../api/data.js';
 
 
-export function setupEdit(section, navigation) {
-    let recipeId
+export function setupEdit(section, nav) {
+    let recipeId;
     const form = section.querySelector('form');
 
     form.addEventListener('submit', (ev => {
@@ -11,23 +11,12 @@ export function setupEdit(section, navigation) {
         onSubmit([...formData.entries()].reduce((p, [k, v]) => Object.assign(p, { [k]: v }), {}));
     }));
 
-    async function onSubmit(data) {
-        const body = JSON.stringify({
-            name: data.name,
-            img: data.img,
-            ingredients: data.ingredients.split('\n').map(l => l.trim()).filter(l => l != ''),
-            steps: data.steps.split('\n').map(l => l.trim()).filter(l => l != '')
-        });
-
-        await eidtRecipe(recipeId, body)
-        navigation.goTo('details', recipeId);
-    }
+    return showEdit;
 
     async function showEdit(id) {
-
         recipeId = id;
         const recipe = await getRecipeById(recipeId);
-
+    
         section.querySelector('[name="name"]').value = recipe.name;
         section.querySelector('[name="img"]').value = recipe.img;
         section.querySelector('[name="ingredients"]').value = recipe.ingredients.join('\n');
@@ -35,5 +24,20 @@ export function setupEdit(section, navigation) {
 
         return section;
     }
-}
 
+    async function onSubmit(data) {
+        const body = {
+            name: data.name,
+            img: data.img,
+            ingredients: data.ingredients.split('\n').map(l => l.trim()).filter(l => l != ''),
+            steps: data.steps.split('\n').map(l => l.trim()).filter(l => l != '')
+        };
+
+        try {
+            await editRecipe(recipeId, body);
+            nav.goTo('details', recipeId);
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+}
