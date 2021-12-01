@@ -3,7 +3,7 @@ const { chromium } = require('playwright-chromium');
 const { expect } = require('chai');
 
 const host = 'http://localhost:3000'; // Application host (NOT service host - that can be anything)
-const DEBUG = false;
+const DEBUG = true;
 
 const mockData = require('./mock-data.json');
 const endpoints = {
@@ -75,7 +75,7 @@ describe('E2E tests', function () {
     });
 
     describe('Catalog', () => {
-        it('show most recent ideas', async () => {
+        it.only('show most recent ideas', async () => {
             await page.goto(host);
             await page.click('text=Dashboard');
             await page.waitForSelector('#dashboard-holder');
