@@ -16,7 +16,8 @@ const views = {};
 const links = {};
 
 const navigation = {
-    goTo
+    goTo,
+    setUserNav
 };
 
 registerView('home', document.getElementById('homePage'), setupHome, 'homeLink');
@@ -27,8 +28,6 @@ registerView('dashboard', document.getElementById('dashboard-holder'), setupDash
 registerView('create', document.getElementById('homePage'), setupCreate, 'createLink');
 document.getElementById('views').remove();
 
-console.log(views);
-console.log(links);
 
 setupNavigaton();
 
