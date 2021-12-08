@@ -1,0 +1,22 @@
+[
+    {
+        "title": "First Article",
+        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, deserunt earum. Tempore, alias minus. Error fuga cum impedit quisquam a aspernatur eveniet dolore Eos incidunt eaque animi modi sequi.",
+        "author": "R.R.Martin"
+    },
+    {
+        "title": "Second Article",
+        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, deserunt earum. Tempore, alias minus. Error fuga cum impedit quisquam a aspernatur eveniet dolore Eos incidunt eaque animi modi sequi.",
+        "author": "Tolkien"
+    },
+    {
+        "title": "Third Article",
+        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, deserunt earum. Tempore, alias minus. Error fuga cum impedit quisquam a aspernatur eveniet dolore Eos incidunt eaque animi modi sequi.",
+        "author": "M.L.King"
+    },
+    {
+        "title": "Fourth Article",
+        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, deserunt earum. Tempore, alias minus. Error fuga cum impedit quisquam a aspernatur eveniet dolore Eos incidunt eaque animi modi sequi.",
+        "author": "I.Vazov"
+    }
+]
