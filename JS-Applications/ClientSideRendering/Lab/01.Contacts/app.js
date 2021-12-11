@@ -10,7 +10,7 @@ render(result, container);
 
 
 function onClick(event) {
-
+    
     if(event.target.classList.contains('detailsBtn')) {
         const id = event.target.parentElement.querySelector('.details').id;
         const element = contacts.find(c => c.id == id);
