@@ -1,4 +1,5 @@
 const endpoint = 'http://localhost:3030/jsonstore/advanced/dropdown';
+
 const data = {
     async get() {
         const respose = await fetch(endpoint);
@@ -12,7 +13,6 @@ const data = {
     },
 
     async post(data) {
-
         const respose = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
