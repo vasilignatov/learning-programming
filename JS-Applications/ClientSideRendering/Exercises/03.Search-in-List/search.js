@@ -16,8 +16,8 @@ const searchTemplate = (towns, match) => html`
 `;
 
 const itemTemplate = (name, match) => html`
-            <li class=${(match && name.toLowerCase().includes(match.toLowerCase())) ? 'active' : ''}>${name}</li>`;
-
+            <li class=${(match && name.toLowerCase().includes(match.toLowerCase())) ? 'active' : ''}>${name}</li>
+`;
 
 const main = document.body;
 update()
