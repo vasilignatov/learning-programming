@@ -21,21 +21,28 @@
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam consequuntur molestiae laudantium autem quas
             odio officia impedit similique nam dolores enim ad officiis, suscipit animi necessitatibus nobis accusamus
             quibusdam fuga.</p>
-    </main>
+</main>
 
     <script>
 
 
         const pages = {
-            '#home': '<h2>Home Page</h2><p>Home page content</p>',
-            '#catalog': '<h2>Catalog Page</h2><p>List of articles</p>',
-            '#about': '<h2>About Page</h2><p>Contact Information</p>'
+            '/home': '<h2>Home Page</h2><p>Home page content</p>',
+            '/catalog': '<h2>Catalog Page</h2><p>List of articles</p>',
+            '/about': '<h2>About Page</h2><p>Contact Information</p>'
         } 
         const defaultPage = '<h2>404</h2><p>Page Not Found</p>'
 
         const main = document.querySelector('main');
         
         window.addEventListener('popstate', updateContent);
+        document.querySelector('nav').addEventListener('click', (e) => {
+            if(e.target.tagName = 'A') {
+                e.preventDefault();
+                history.pushState({name: 'Peter'}, '', e.target.href)
+                console.log( e.target.href)
+            }
+        })
 
         function updateContent(e) {
             console.log(e);
