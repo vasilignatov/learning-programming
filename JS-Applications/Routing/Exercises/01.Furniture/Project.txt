@@ -1,0 +1,6 @@
+1. Extract project sceleton
+2. Setup NPM project
+Analyze HTML and determine templates
+Configure routing modules with placeholder modules
+Implement requests
+Implement view
