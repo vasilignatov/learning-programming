@@ -16,7 +16,7 @@ const main = document.querySelector('.container');
 
 page('/', decorateContext, dashboardPage);
 page('/create', decorateContext, createPage);
-page('/detail/:id', decorateContext, detailsPage);
+page('/details/:id', decorateContext, detailsPage);
 page('/edit/:id', decorateContext, editPage);
 page('/login', decorateContext, loginPage);
 page('/register', decorateContext, registerPage);
@@ -43,10 +43,10 @@ function decorateContext(ctx, next) {
 function setUserNav() {
     const userId = sessionStorage.getItem('userId');
     if (userId) {
-        document.getElementById('user').style.display == 'inline-block';
-        document.getElementById('guest').style.display == 'none';
+        document.getElementById('user').style.display = 'inline-block';
+        document.getElementById('guest').style.display = 'none';
     } else {
-        document.getElementById('user').style.display == 'none';
-        document.getElementById('guest').style.display == 'inline-block';
+        document.getElementById('user').style.display = 'none';
+        document.getElementById('guest').style.display = 'inline-block';
     }
 }
