@@ -1,2 +1,4 @@
 .imgs/
-
+.zip
+.png
+.jpg

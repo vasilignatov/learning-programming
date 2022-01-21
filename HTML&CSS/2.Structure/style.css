@@ -1,0 +1,20 @@
+header {
+    background-color: cadetblue;
+}
+main {
+    background-color: orange;
+}
+footer {
+    background-color: greenyellow
+}
+
+.mainNav {
+    display: inline-block;
+    margin: 5px;
+}
+
+aside {
+    width: 25%;
+    background-color: hotpink;
+}
+
