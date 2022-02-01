@@ -1,16 +1,26 @@
 import { html } from '../../node_modules/lit-html/lit-html.js';
 import { getF } from '../api/data.js';
 
-const dashboardTemplate = (data) => html`
+const dashboardTemplate = (data, search, onSearch) => html`
     <div class="row space-top">
         <div class="col-md-12">
             <h1>Welcome to Furniture System</h1>
             <p>Select furniture from the catalog to view details.</p>
+
+            <!-- Search box -->
+            <fieldset style="display: inline-block;">
+                <legend>Search field</legend> 
+                <input type="text" name="search" id="search" value=${search}>
+                <button @click=${onSearch}>Search</button>
+            </fieldset>
+
         </div>
     </div>
     <div class="row space-top">
         ${data.map(itemTemplate)}
-    </div>`;
+    </div>
+`;
+
 
 const itemTemplate = (item) => html`
     <div class="col-md-4">
@@ -29,6 +39,15 @@ const itemTemplate = (item) => html`
     </div>`;
 
 export async function dashboardPage(ctx) {
-    const data = await getF();
-    ctx.render(dashboardTemplate(data));
+    const searchParam = ctx.querystring.split('=')[1];
+    
+    const data = await getF(searchParam);
+    ctx.render(dashboardTemplate(data, searchParam, onSearch));
+
+    function onSearch(event) {
+        //get data from input 
+        const searchInput = document.getElementById('search').value;
+        //send data to router 
+        ctx.page.redirect('/?search=' + searchInput);
+    }
 }
