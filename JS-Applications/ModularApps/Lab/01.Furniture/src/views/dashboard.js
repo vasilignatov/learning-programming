@@ -1,22 +1,25 @@
 import { html } from '../../node_modules/lit-html/lit-html.js';
 import { getF } from '../api/data.js';
+import { notify } from '../views/notifications.js';
+import { createModal } from '../views/modal.js';
 
-const dashboardTemplate = (data, search, onSearch) => html`
+
+const dashboardTemplate = (data, search, onSearch, onDetails) => html`
     <div class="row space-top">
         <div class="col-md-12">
             <h1>Welcome to Furniture System</h1>
             <p>Select furniture from the catalog to view details.</p>
-
+    
             <!-- Search box -->
             <fieldset style="display: inline-block;">
-                <legend>Search field</legend> 
+                <legend>Search field</legend>
                 <input type="text" name="search" id="search" value=${search}>
                 <button @click=${onSearch}>Search</button>
             </fieldset>
-
+    
         </div>
     </div>
-    <div class="row space-top">
+    <div @click=${onDetails} class="row space-top">
         ${data.map(itemTemplate)}
     </div>
 `;
@@ -32,17 +35,23 @@ const itemTemplate = (item) => html`
                     <p>Price: <span>${item.price} $</span></p>
                 </footer>
                 <div>
-                    <a href=${`/details/${item._id}`} class="btn btn-info">Details</a>
+                    <a href="javascript:void(0)" class="btn btn-info">Details</a>
                 </div>
             </div>
         </div>
     </div>`;
 
 export async function dashboardPage(ctx) {
-    const searchParam = ctx.querystring.split('=')[1];
-    
+    const searchParam = ctx.querystring.split('=')[1] || '';
+
     const data = await getF(searchParam);
-    ctx.render(dashboardTemplate(data, searchParam, onSearch));
+    if (data.length == 0) {
+        ctx.render(dashboardTemplate(data, searchParam, onSearch, onDetails));
+        notify(`No Matches ${searchParam} Found!`);
+        return;
+    }
+    ctx.render(dashboardTemplate(data, searchParam, onSearch, onDetails));
+
 
     function onSearch(event) {
         //get data from input 
@@ -50,4 +59,11 @@ export async function dashboardPage(ctx) {
         //send data to router 
         ctx.page.redirect('/?search=' + searchInput);
     }
+
+    function onDetails(event) {
+        if(event.target.tagName == 'A'){
+            createModal('This is simple Modal examle implemented for educational purpose!');
+        }
+    }
+
 }
