@@ -4,8 +4,8 @@ export const settings = {
 
 async function request(url, options) {
     try {
-        const response =  await fetch(url, options);
-
+        const response = await fetch(url, options);
+        
         if(!response.ok) {
             const err = await response.json();
             throw new Error(err);
@@ -24,7 +24,7 @@ async function request(url, options) {
     }
 }
 
-function getOptions(method = 'get', data) {
+function getOptions(method = 'GET', data) {
     const result = {
         method,
         headers: {}
@@ -36,7 +36,7 @@ function getOptions(method = 'get', data) {
         result.headers['X-Authorization'] = token;
     }
 
-    if (data) {
+    if (data /*&& (method == 'post' || method == 'put')*/ ) {
         result.headers['Content-Type'] = 'application/json';
         result.body = JSON.stringify(data);
     }
@@ -50,19 +50,20 @@ export async function get(url) {
 }
 
 export async function post(url, data) {
-    return await request(url, getOptions('post', data));
+    return await request(url, getOptions('POST', data));
 }
 
 export async  function put(url, data) {
-    return await request(url, getOptions('put', data));
+    return await request(url, getOptions('PUT', data));
 }
 export async function del(url) {
-    return await request(url, getOptions('delete'));
+    return await request(url, getOptions('DELETE'));
 }
 
 
 export async function login(email, password) {
-    const result = await post(settings.host + '/users/login', {email, password});
+    const data = {email, password};
+    const result = await post(settings.host + '/users/login', data);
 
     sessionStorage.setItem('authToken', result.accessToken);
     sessionStorage.setItem('email', result.email);

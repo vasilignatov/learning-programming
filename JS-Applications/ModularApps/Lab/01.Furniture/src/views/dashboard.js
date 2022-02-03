@@ -1,4 +1,6 @@
 import { html } from '../../node_modules/lit-html/lit-html.js';
+import { until } from '../../node_modules/lit-html/directives/until.js';
+
 import { getF } from '../api/data.js';
 import { notify } from '../views/notifications.js';
 import { createModal } from '../views/modal.js';
@@ -41,17 +43,29 @@ const itemTemplate = (item) => html`
         </div>
     </div>`;
 
+const loaderTemplate = html`
+<div class="lds-roller">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+`
+
 export async function dashboardPage(ctx) {
     const searchParam = ctx.querystring.split('=')[1] || '';
 
     const data = await getF(searchParam);
     if (data.length == 0) {
-        ctx.render(dashboardTemplate(data, searchParam, onSearch, onDetails));
+        ctx.render(unitl(populateTemlate(), loaderTemplate));
         notify(`No Matches ${searchParam} Found!`);
         return;
     }
-    ctx.render(dashboardTemplate(data, searchParam, onSearch, onDetails));
-
+    ctx.render(until(populateTemlate(), loaderTemplate));
 
     function onSearch(event) {
         //get data from input 
@@ -61,9 +75,13 @@ export async function dashboardPage(ctx) {
     }
 
     function onDetails(event) {
-        if(event.target.tagName == 'A'){
+        if (event.target.tagName == 'A') {
             createModal('This is simple Modal examle implemented for educational purpose!');
         }
     }
 
+    async function populateTemlate() {
+        const data = await getF(searchParam);
+        return dashboardTemplate(data, searchParam, onSearch, onDetails);
+    }
 }

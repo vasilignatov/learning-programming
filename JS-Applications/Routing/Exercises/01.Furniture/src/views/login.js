@@ -1,5 +1,5 @@
 import { html } from '../../node_modules/lit-html/lit-html.JS';
-import { login, register } from '../api/api.js';
+import { login } from '../api/api.js';
 
 const loginTemplate = (onSubmit) => html`
     <div class="row space-top">
