@@ -1,0 +1,9 @@
+article {
+    height: 150px;
+    background-color: lightblue;
+    overflow: auto
+}
+
+p {
+    width: 150px;
+}
