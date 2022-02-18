@@ -1,0 +1,93 @@
+#articlesSection {
+    max-width: 1200px;
+    margin: 0 auto;
+    vertical-align: top;
+    padding: 64px 0 calc(64px - 32px) 0;
+}
+
+#articlesSection .title {
+    font-size: 28px;
+    margin-bottom: 64px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Articles listing -------------------*/
+.articles li {
+    display: inline-block;
+    width: 30%;
+    margin-right: 4.6%;
+    margin-bottom: 32px;
+}
+
+/* All third element doesn`t have margin right */
+/* .articles li:not(:nth-child(3n+3)) { */
+.articles li:nth-child(3n+3) {
+    margin-right: 0;
+}
+
+
+
+/* Article componet --------------------*/
+.article {
+    width: 100%;
+}
+
+
+.article .article__img__wrapper {
+    aspect-ratio: 1 / 1;
+    border-radius: 21px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+
+.article .article__img__wrapper .article__img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.article .article__title {
+    font-weight: bold;
+    font-size: 21px;
+    line-height: 28px;
+    text-transform: capitalize;
+    margin-bottom: 8px;
+}
+
+article .article__desc {
+    font-size: 16px;
+    font-weight: 300;
+    color: #718096;
+    line-height: 22px;
+}
+
+/* Tag componet --------------------*/
+.tag {
+    display: inline-block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.tag.tag--info {
+    background-color: #90cdf4;
+    color: #2c5282;
+}
+
+.tag.tag--success {
+    background-color: #9ae6b4;
+    color: #276749;
+}
+
+.tag.tag--warn {
+    background-color: #faf089;
+    color: #975a16;
+}
+
+.tag.tag--danger {
+    background-color: #feb2b2;
+    color: #9b2c2c;
+}
