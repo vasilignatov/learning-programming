@@ -91,3 +91,21 @@ article .article__desc {
     background-color: #feb2b2;
     color: #9b2c2c;
 }
+
+
+/* FLOAT */
+
+#float {
+    background-color: lightgreen;
+}
+
+#float img {
+    float: right;
+    margin: 15px;
+}
+
+#float p {
+    text-align: justify;
+    line-height: 20px;
+    line
+}
