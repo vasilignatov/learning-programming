@@ -6,11 +6,11 @@ ul {
  
 .grid__item {
     background-color: lightsalmon;
+    padding-block-end: ;
 }
 
 .grid__container {
    display: grid;   
-   grid-template-columns: 300px 300px;
+   grid-template-columns: repeat(3, 1fr);
    gap: 24px;
 }
-
