@@ -1,33 +1,38 @@
+/* @import "font-awesome"; */
+
+
 body {
     margin: 0;
     padding: 0;
 }
 
 div.viewport {
-    display: block;
-    width: 100%;
+    width: 100vw;
     height: 50vh;
+    /* position: relative; */
 }
 
-#first {
+div:first-of-type {
     background-image: linear-gradient(#0c5780, #14ac9a);
 }
 
-#second {
+div:last-of-type {
     background-image: linear-gradient(#ff8a00, #e52e71);
 }
 
 section.card {
     position: relative;
-    width: 50%;
-    /* display: inline-block; */
-    /* height: 100%; */
-    /* margin: auto auto; */
+    aspect-ratio: 1 / 1;
+    width: 25%;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 img {
-    /* vertical-align: middle; */
-    width: 160px;
-    /* display: block; */
-    /* margin: auto; */
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
