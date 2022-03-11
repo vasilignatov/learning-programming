@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TestComponent } from './test/test.component';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,26 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'componets';
+  
+  showText: boolean = false;
+
+  toggleText() {
+    this.showText = !this.showText;
+  }
+
+  // users = [
+  //   {
+  //     name: 'Ivan 1',
+  //     age: 20
+  //   },
+  //   {
+  //     name: 'Ivan 2',
+  //     age: 21
+  //   },
+  //   {
+  //     name: 'Ivan 3',
+  //     age: 22
+  //   }
+  // ];
+
 }
