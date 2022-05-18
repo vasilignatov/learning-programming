@@ -32,5 +32,5 @@ const teamTemplate = (team) => html`
 
 export async function browsePage(ctx) {
     const teams = await getTeams();
-    ctx.render(until(browseTemplate(teams), ));
+    ctx.render(browseTemplate(teams) );
 }

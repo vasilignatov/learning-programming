@@ -1,6 +1,8 @@
 import { html } from '../../node_modules/lit-html/lit-html.js';
 import { login } from '../api/data.js';
 
+
+
 const loginTemplate = (onSubmit, errorMsg) => html`
                 <section id="login">
                     <article class="narrow">
@@ -21,7 +23,7 @@ const loginTemplate = (onSubmit, errorMsg) => html`
 
 export async function loginPage(ctx) {
 
-    ctx.render(loginTemplate());
+    ctx.render(loginTemplate(onSubmit));
 
     async function onSubmit(ev) {
         ev.preventDefault();
@@ -31,15 +33,12 @@ export async function loginPage(ctx) {
         const password = formData.get('password');
 
         try {
-            await login({ emial, password });
+            await login( email, password );
 
             ctx.setUserNav();
             ctx.page.redirect('/my-teams'); 
         } catch(err) {
-            ctx.render(loginTemplate(onSubmit, err.message))
-        }
-        if (email != '' && password != '') {
-            
+            ctx.render(loginTemplate(onSubmit, err.message));
         }
     }
 }
