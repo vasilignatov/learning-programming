@@ -9,7 +9,12 @@ export const logout = api.logout;
 
 
 export async function getTeams() {
-    return await api.get(host + '/data/teams')
+    const teams =  await api.get(host + '/data/teams');
+    const members = await getMembers(teams.map(t => t._id));
+    console.log(members);
+
+    //TODO attach members to each team
+    return teams;
 }
 
 export async function getTeamById(id) {
@@ -26,4 +31,24 @@ export async function editTeam(id, team) {
 
 export async function deleteTeam(id) {
     return await api.del(host + '/data/teams/' + id);
+}
+
+
+export async function requestToJoin(teamId) {
+    const body = { teamId };
+    return await api.post(host + '/data/members', body);
+}
+
+
+// members collection
+export async function getRequestsByTeamId(teamId) {
+    return await api.get(host + `/data/members?where=teamId%3D%22${teamId}%22&load=user%3D_ownerId%3Ausers`);
+}
+export async function getMembers(teamId) {
+    const query = encodeURIComponent(`teamId IN ("${teamId.join('", "')}") AND status="member"`);
+    return await api.get(host + `/data/members?where=${query}`);
+}
+
+export async function cancelMembership(requestId) {
+    return await api.del(host + '/data/members/' + requestId);
 }
