@@ -1,6 +1,7 @@
 import { html } from '../../node_modules/lit-html/lit-html.js';
 import { until } from '../../node_modules/lit-html/directives/until.js';
 import { getTeams } from '../api/data.js';
+import { loaderTemplate } from './common/loader.js';
 
 const browseTemplate = (teams) => html`
                 <section id="browse">
@@ -31,6 +32,10 @@ const teamTemplate = (team) => html`
 `;
 
 export async function browsePage(ctx) {
+    ctx.render(until(populateTemplate(), loaderTemplate()));
+}
+
+async function populateTemplate() {
     const teams = await getTeams();
-    ctx.render(browseTemplate(teams) );
+    return browseTemplate(teams)
 }

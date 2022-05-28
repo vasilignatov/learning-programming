@@ -1,16 +1,16 @@
 import { loaderTemplate } from './common/loader.js';
 import { html } from '../../node_modules/lit-html/lit-html.js';
 import { until } from '../../node_modules/lit-html/directives/until.js';
-import { cancelMembership, getRequestsByTeamId, getTeamById, requestToJoin } from '../api/data.js';
+import { cancelMembership, getRequestsByTeamId, getTeamById, requestToJoin, approveMembership } from '../api/data.js';
 
-const detailsTemplate = (team, createControls) => html`
+const detailsTemplate = (team, isOwner, createControls,  members, pending) => html`
 <section id="team-home">
     <article class="layout">
         <img src=${team.logoUrl} class="team-logo left-col">
         <div class="tm-preview">
             <h2>${team.name}</h2>
             <p>${team.description}</p>
-            <span class="details">???? Members</span>
+            <span class="details">${team.memberCount} Members</span>
             <div>
                 ${createControls}
             </div>
@@ -19,23 +19,34 @@ const detailsTemplate = (team, createControls) => html`
             <h3>Members</h3>
             <ul class="tm-members">
                 <li>My Username</li>
-                <li>James<a href="#" class="tm-control action">Remove from team</a></li>
+                
                 <li>Meowth<a href="#" class="tm-control action">Remove from team</a></li>
             </ul>
         </div>
-        <div class="pad-large">
-            <h3>Membership Requests</h3>
-            <ul class="tm-members">
-                <li>John<a href="#" class="tm-control action">Approve</a><a href="#"
-                        class="tm-control action">Decline</a></li>
-                <li>Preya<a href="#" class="tm-control action">Approve</a><a href="#"
-                        class="tm-control action">Decline</a></li>
-            </ul>
-        </div>
+        ${isOwner ? 
+            html`<div class="pad-large">
+                    <h3>Membership Requests</h3>
+                    <ul class="tm-members">
+                        ${pending.map(pendingMemberTemplate)}    
+                    </ul>
+                    </div>` : ''}
     </article>
 </section>
 `;
 
+const pendingMemberTemplate = (request, isOwner) => html`
+    <li>
+        ${request.user.username}
+        <a @click=${request.approve} href="javascript:void(0)" class="tm-control action">Approve</a>
+        <a @click=${request.decline} href="javascript:void(0)" class="tm-control action">Decline</a>
+    </li>
+`;
+
+const memberTemplate = (request, isOwner) => html`
+    <li>${request.user.username}
+        ${ isOwner ? html`<a @click=${request.decline} href="javascript:void(0)" class="tm-control action">Remove from team</a>` : ''}
+    </li>
+`;
 
 export async function detailsPage(ctx) {
     const teamId = ctx.params.id;
@@ -49,15 +60,25 @@ export async function detailsPage(ctx) {
             getTeamById(teamId),
             getRequestsByTeamId(teamId)
         ]);
+        requests.forEach(r =>{               
+            r.approve = (e) => approve(e, r);
+            r.decline = (e) => leave(e, r._id);
+        });
 
-        return detailsTemplate(team, createControls);
+        const isOwner = userId == team._ownerId;
+        const members = requests.filter(r => r.status == 'member')
+        const pending = requests.filter(r => r.status == 'pending')
+        team.memberCount = members.length;
+
+
+        return detailsTemplate(team,isOwner, createControls, members, pending);
 
 
         function createControls() {
 
             if (userId) {
                 const request = requests.find(r => r._ownerId == userId)
-                if (userId == team._ownerId) {
+                if (isOwner) {
                     //Current user is owner
                     return html`<a href=${`/edit/${team._id}`} class="action">Edit team</a>`;
                 } else if (request && request.status == 'member') {
@@ -90,6 +111,12 @@ export async function detailsPage(ctx) {
                 await cancelMembership(requestId);
                 ctx.remder(await populateTemplate(teamId))
             }
+        }
+
+        async function approve(e, request) {
+            e.target.remove();
+            await approveMembership(request);
+            ctx.render(await populateTemplate(teamId))
         }
     }
 }
