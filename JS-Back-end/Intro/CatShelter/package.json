@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "formidable": "^2.0.1",
+    "lit-html": "^2.2.5",
     "nodemon": "^2.0.16"
   }
 }

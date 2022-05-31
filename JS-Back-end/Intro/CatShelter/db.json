@@ -1,0 +1,30 @@
+{
+  "cats": [
+    {
+      "name": "Navcho",
+      "description": "asdf",
+      "breed": "Fluffy Cat"
+    },
+    {
+      "name": "Navcho2",
+      "description": "asdf",
+      "breed": "Fluffy Cat"
+    },
+    {
+      "name": "Navcho3",
+      "description": "asdf",
+      "breed": "Fluffy Cat"
+    },
+    {
+      "name": "Johni",
+      "description": "asdfa sdfa sdf ",
+      "breed": "Angorska"
+    }
+  ],
+  "breeds": [
+    "Angorska",
+    "Siamska",
+    "Ulichna",
+    "Persiiska"
+  ]
+}
