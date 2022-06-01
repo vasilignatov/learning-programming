@@ -12,7 +12,9 @@ const saveCat = (data) => {
 const saveBreed = (data) => {
     db.breeds.push(data);
 
-    // let result = JSON.stringify()
+    let result = JSON.stringify(db, '', 2);
+
+    return fs.writeFile('./db.json', result, { encoding: "utf8"});
 }
 
 

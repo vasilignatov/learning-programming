@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "test",
     "start": "nodemon index.js"
   },
   "keywords": [],
@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "formidable": "^2.0.1",
-    "lit-html": "^2.2.5",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "whatwg-url": "^11.0.0"
   }
 }

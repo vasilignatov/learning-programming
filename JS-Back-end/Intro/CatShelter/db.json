@@ -19,12 +19,18 @@
       "name": "Johni",
       "description": "asdfa sdfa sdf ",
       "breed": "Angorska"
+    },
+    {
+      "name": "asdf",
+      "description": "asdf",
+      "breed": "Angorska"
     }
   ],
   "breeds": [
     "Angorska",
     "Siamska",
     "Ulichna",
-    "Persiiska"
+    "Persiiska",
+    "BorovskaKotka"
   ]
 }
