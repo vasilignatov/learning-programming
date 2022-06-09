@@ -2,11 +2,17 @@ const port = 5000;
 const path = require('path');
 const express = require('express');
 const fs = require('fs');
+const handlebars = require('express-handlebars');
 
 const catControler = require('./controllers/catController.js');
 const requestLogger = require('./middlewares/requestLogger.js');
 
 const app = express(); // create express server
+
+app.engine('hbs', handlebars({
+    extname: 'hbs'
+}));
+app.set('view engine', 'hbs');
 
 app.use('/static', express.static('./public'));
 // evrething starts with static static have access to public folder
@@ -30,12 +36,17 @@ app.use('/cats', catControler);
 
 // download method
 app.get('/', (req, res) => { // route path
+    // CUSTOM HTML RESPONSE
+    // let absPath = path.join(__dirname, './views/home/index.html');
+    // let relPath = path.resolve(__dirname, './views/home/index.html');
 
-    let absPath = path.join(__dirname, './views/home/index.html');
-    let relPath = path.resolve(__dirname, './views/home/index.html');
+    // res.sendFile(__dirname + '/views/home/index.html');
 
 
-    res.sendFile(__dirname + '/views/home/index.html');
+    //RENDER WITH HANDLEBARS
+    res.render('home', {
+        layout: false
+    });
 
 });
 // url params usecase
