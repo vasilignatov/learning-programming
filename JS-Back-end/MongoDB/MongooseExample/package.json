@@ -1,16 +1,16 @@
 {
-  "name": "mongooseexample",
+  "name": "y",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mongodb": "^4.7.0",
     "mongoose": "^6.4.1"
   }
 }

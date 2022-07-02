@@ -1,31 +1,27 @@
-const initDb = require('./dbCionfig');
-const Person = require('./Models/Person');
+const initDb = require('./dbConfig');
+const Course = require('./models/Course');
+
+
 
 initDb()
     .then(() => {
-        // //first way to create
-        // let person = new Person({
-        //     firstName: 'Someone',
-        //     lastName: 'Nqkoisi',
-        //     age:25
+        // // First way to create db record
+        // let course = new Course({
+        //     name: 'VanilaJS Course'
         // });
+        // // use this methood when we need to create extra logic and then save the record!
+        // course.save();
 
-        // person.save()
-        //     .then(() =>{
-        //         console.log('Person saved!');
-        //     });
-
-        //Secon way to create a db record
-        Person.create({
-            firstName: 'Someone',
-            lastName: 'Nqkoisi',
-            age: 25
+        // Second war- with static method of the class;
+        Course.create({
+            name: 'JS Advances Cource',
+            students: 10
         })
-            .then(person => {
-                console.log('Person created!');
-                console.log(person); // return record from db
-            });
-
-
-
+        .then(c => {
+            console.log('Course created!');
+            console.log(c);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
     });
