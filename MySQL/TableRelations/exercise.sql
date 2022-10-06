@@ -24,3 +24,42 @@ values ('Roberto', 43300.00, 102),
 	('Tom', 56100.00, 103),
 	('Yana', 60200.00, 101);
     
+    
+#02. One-To-Many Relationship
+CREATE DATABASE cars;
+
+CREATE TABLE manufacturers (
+	`manudacturer_id` INT PRIMARY KEY AUTO_INCREMENT,
+	`name`VARCHAR(50) NOT NULL UNIQUE,
+    `established_on` DATE
+    );
+    
+INSERT INTO manufacturers (`name`, `established_on`)
+VALUES 
+	('BMW', '1916/01/03'),
+	('Tesla', '2003/01/01'),
+	('Lada', '1966/01/05');
+
+CREATE TABLE models (
+`model_id` INT PRIMARY KEY AUTO_INCREMENT, 
+`name`VARCHAR(70) NOT NULL,
+`manudacturer_id` INT,
+CONSTRAINT fk
+FOREIGN KEY (`manudacturer_id`)
+REFERENCES manufacturers(`manudacturer_id`)
+);
+
+INSERT INTO manufacturers (`model_id`,`name`,`manudacturer_id`)
+VALUES 
+	(101),
+	(102),
+	(103),
+	(104),
+	(105),
+	(106);
+    
+ 
+
+
+
+
