@@ -40,6 +40,32 @@ ORDER BY e.employee_id
 LIMIT 5;
 
 
+#2. Towns and Addresses
+SELECT 
+	t.town_id,
+    t.name AS 'town_name',
+    a.address_text
+FROM addresses AS a
+RIGHT JOIN towns as t
+ON a.town_id = t.town_id
+WHERE t.name IN('San Francisco', 'Sofia', 'Carnation')
+ORDER BY t.town_id, a.address_id;
+
+
+#3. Employees Without Managers
+# Write a query to get information about employee_id, first_name, last_name, department_id and salary 
+# for all employees who don't have a manager. 
+SELECT 
+	employee_id, 
+    first_name, 
+    last_name, 
+    department_id,
+    salary 
+FROM
+    employees
+WHERE
+    manager_id IS NULL;
+
 # 4.High Salary
 SELECT 
     COUNT(*) AS 'count'
