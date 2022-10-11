@@ -67,14 +67,69 @@ SELECT
 	d.name as 'dept_name'
 FROM employees as e
 JOIN departments as d ON d.department_id = e.department_id
-WHERE DATE(hire_date)> '1999-1-1'
-ORDER BY hire_date
+WHERE DATE(e.hire_date) > '1999-01-01 00:00:00'
+	AND d.`name` IN ('Sales','Finance')
+ORDER BY hire_date;
 
 
 #7.	Employees with Project
+SELECT 
+	e.employee_id,
+	e.first_name,
+	p.`name` as 'project_name'
+FROM employees AS e
+JOIN employees_projects as ep ON e.employee_id = ep.employee_id
+JOIN projects as p ON ep.project_id = p.project_id
+WHERE DATE(p.start_date) > '2002-08-13' 
+	AND end_date IS NULL
+ORDER BY e.first_name, p.name
+LIMIT 5;
+
+
 #8.	Employee 24
+SELECT 
+	e.employee_id,
+	e.first_name,
+    IF(YEAR(p.start_date) >= 2005, NULL, p.`name`)
+	as 'project_name'
+FROM employees AS e
+JOIN employees_projects as ep ON e.employee_id = ep.employee_id
+RIGHT JOIN projects as p ON ep.project_id = p.project_id
+WHERE e.employee_id = 24 
+ORDER BY e.first_name, p.name;
+
+
 #9.	Employee Manager
+SELECT 
+    e.employee_id,
+    e.first_name,
+    e.manager_id,
+    m.first_name AS manager_name
+FROM
+    employees AS e,
+    employees AS m
+WHERE
+    e.manager_id = m.employee_id
+        AND e.manager_id IN (3 , 7)
+ORDER BY e.first_name;
+
+
 #10.Employee Summary
+SELECT 
+    e.employee_id,
+    CONCAT(e.first_name, ' ', e.last_name) as employee_name,
+    CONCAT(m.first_name, ' ', m.last_name) AS manager_name,
+    d.name as department_name
+FROM
+    employees AS e,
+    employees AS m
+JOIN departments as d ON e.department_id = d.department_id
+WHERE
+    e.manager_id = m.employee_id
+ORDER BY e.employee_id;
+
+-- -45:49 time
+
 #11.Min Average Salary
 #12.Highest Peaks in Bulgaria
 #13.Count Mountain Ranges
