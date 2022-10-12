@@ -119,19 +119,38 @@ SELECT
     e.employee_id,
     CONCAT(e.first_name, ' ', e.last_name) as employee_name,
     CONCAT(m.first_name, ' ', m.last_name) AS manager_name,
-    d.name as department_name
-FROM
-    employees AS e,
-    employees AS m
+    d.name as 'department_name'
+FROM employees as e
+JOIN employees as m ON e.manager_id = m.employee_id 
 JOIN departments as d ON e.department_id = d.department_id
-WHERE
-    e.manager_id = m.employee_id
-ORDER BY e.employee_id;
+ORDER BY e.employee_id
+LIMIT 5;
 
--- -45:49 time
 
 #11.Min Average Salary
+SELECT 
+		AVG(salary) as 'min_average_salary'
+FROM 
+	employees
+GROUP BY department_id, 'min_average_salary'
+ORDER BY `min_average_salary`
+LIMIT 1;
+
+
 #12.Highest Peaks in Bulgaria
+SELECT
+	mc.country_code,
+	m.mountain_range,
+	p.peak_name,
+	p.elevation
+FROM peaks as p 
+JOIN mountains as m ON m.id = p.mountain_id
+JOIN mountains_countries as mc ON mc.mountain_id = m.id
+WHERE mc.country_code = 'BG' AND elevation >2835
+ORDER BY elevation DESC
+
+
+
 #13.Count Mountain Ranges
 #14.Countries with Rivers
 #15.*Continents and Currencies
