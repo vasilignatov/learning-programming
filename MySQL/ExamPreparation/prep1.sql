@@ -105,3 +105,86 @@ SET
 WHERE 
 	c.id IN (SELECT coach_id FROM players_coaches)
     AND first_name LIKE 'A%';
+    
+
+# 4. Delete
+DELETE FROM players 
+WHERE age >= 45;
+
+#5.	Players 
+SELECT first_name, age, salary
+FROM players
+ORDER BY salary DESC;
+
+#6. Young offense players without contract
+SELECT 
+	p.id,
+	CONCAT(p.first_name, ' ', p.last_name) as full_name,
+	p.age,
+	p.position,
+	p.hire_date
+FROM players as p
+WHERE 
+	p.age < 23 AND 
+	p.position = 'A' AND 
+    hire_date IS NULL AND
+    (SELECT strength FROM skills_data as sd
+    WHERE sd.id = p.skills_data_id ) > 50
+ORDER BY p.salary, p.age;
+
+
+SELECT 
+    p.id,
+    CONCAT(p.first_name, ' ', p.last_name) AS full_name,
+    p.age,
+    p.position,
+    p.hire_date
+FROM
+    players AS p
+JOIN skills_data AS sd 
+ON sd.id = p.skills_data_id
+WHERE
+    p.age < 23 AND 
+    p.position = 'A' AND
+	p.hire_date IS NULL AND
+    sd.strength > 50
+ORDER BY p.salary , p.age;
+
+
+# 07. Detail info for all teams
+SELECT 
+	t.name as team_name,
+	t.established,
+ 	t.fan_base,
+    COUNT(p.id) AS players_count
+FROM teams AS t
+LEFT JOIN players AS p 
+ON p.team_id = t.id
+GROUP BY t.id 
+ORDER BY players_count DESC, fan_base DESC;
+
+
+# 8. The fastest player by towns
+SELECT 
+	max_speed,
+    town_name
+FROM players
+JOIN ON 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
