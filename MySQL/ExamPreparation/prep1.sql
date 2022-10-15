@@ -166,21 +166,47 @@ ORDER BY players_count DESC, fan_base DESC;
 
 # 8. The fastest player by towns
 SELECT 
-	max_speed,
-    town_name
-FROM players
-JOIN ON 
+	MAX(sd.speed) as  max_speed,
+    tw.name
+FROM skills_data as sd
+RIGHT JOIN players AS p ON sd.id = p.skills_data_id
+RIGHT JOIN teams AS t ON t.id = p.team_id
+JOIN stadiums AS s ON s.id = t.stadium_id
+RIGHT JOIN towns AS tw ON tw.id = s.town_id
+WHERE t.name != 'Devify'  
+GROUP BY tw.id
+ORDER BY max_speed DESC, tw.name;
 
 
 
+#9
+SELECT *
+FROM countries;
+#TO DO!!!
 
 
 
+#10
+DELIMITER $$
+CREATE FUNCTION udf_stadium_players_count (stadium_name VARCHAR(30)) 
+RETURNS INT
+DETERMINISTIC
+BEGIN 
+	RETURN(SELECT COUNT(p.id)
+    FROM stadiums as s
+    JOIN teams as t  ON s.id = t.stadium_id
+    JOIN players as p ON t.id = p.team_id
+    WHERE s.name = stadium_name
+    );
+END$$
 
 
-
-
-
+#11
+DELIMITER $$
+CREATE PROCEDURE udp_find_playmaker(min_dribble_points INT, team_name VARCHAR(45))
+BEGIN
+	SELECT * FROM 
+END$$
 
 
 
