@@ -71,7 +71,7 @@
 
       connectedCallback() {
         const element = template.content.cloneNode(true);
-        element.querySelector('img') = this.img;
+        element.querySelector('img').src = this.img;
         this.shadowRoot.appendChild(element);
       }
     }
@@ -79,6 +79,7 @@
     const template = document.getElementById('popup-template');
 
     customElements.define('popup-widget', PopupWidget);
+    
   </script>
 
 </body>
