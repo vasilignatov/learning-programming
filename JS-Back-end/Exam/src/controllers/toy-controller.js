@@ -37,9 +37,7 @@ router.get('/:id', async (req, res) => {
     let isOwner = toy.owner == req.user?._id;
     let isBuyed = toyData.buyingList.some(x => x == req.user?._id);
 
-
     res.render('details', { ...toyData, isOwner, isBuyed });
-    // res.render('details', { ...houseData, isOwner, tenants, isAvailable, isRented });
 });
 
 
