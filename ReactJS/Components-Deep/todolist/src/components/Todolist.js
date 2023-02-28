@@ -26,7 +26,7 @@ export default function TodoList() {
                     ...oldState,
                     result
                 ]);
-                
+
                 e.target.value = '';
             })
             .catch(err => console.log(err));
@@ -39,16 +39,24 @@ export default function TodoList() {
     }
 
     const toggleClickItemHandler = (id) => {
-        setTodos(oldState => {
-            let selectedTodo = oldState.find(todo => todo.id == id);
-            let selectedTodoIndex = oldState.findIndex(todo => todo.id == id);
-            let toggled = { ...selectedTodo, isDone: !selectedTodo.isDone };
+        setTodos(oldTodos => {
+            // let selectedTodo = oldState.find(todo => todo.id == id);
+            // let selectedTodoIndex = oldState.findIndex(todo => todo.id == id);
+            // let toggled = { ...selectedTodo, isDone: !selectedTodo.isDone };
 
-            return [
-                ...oldState.slice(0, selectedTodoIndex),
-                toggled,
-                ...oldState.slice(selectedTodoIndex)
-            ];
+            // return [
+            //     ...oldState.slice(0, selectedTodoIndex),
+            //     toggled,
+            //     ...oldState.slice(selectedTodoIndex)
+            // ];
+
+            return oldTodos.map(todo => {
+                console.log(todo);
+                if (todo.id === id) {
+                    return { ...todo, isDone: !todo.isDone }
+                }
+                return todo;
+            })
         });
     }
 
