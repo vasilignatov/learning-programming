@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TodoItem from './TodoItem.js';
 import uniqid from 'uniqid';
+import { API_URL, createTodo } from '../services/todoService.js'
 
 export default function TodoList() {
-    const [todos, setTodos] = useState([
-        { id: uniqid(), text: 'Clean my room', isDone: false },
-        { id: uniqid(), text: 'Go to the gym', isDone: false },
-        { id: uniqid(), text: 'Make dinner', isDone: false },
-        { id: uniqid(), text: 'Wash dishes', isDone: false }
-    ]);
+
+    const [todos, setTodos] = useState([]);
+    useEffect(() => {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => setTodos(data))
+            .catch(err => console.log(err));
+    }, []);
 
     const onTodoInputBlur = (e) => {
         let todo = {
@@ -17,10 +20,17 @@ export default function TodoList() {
             isDone: false
         }
 
-        setTodos(oldState => [
-            ...oldState,
-            todo
-        ]);
+        createTodo(todo)
+            .then(result => {
+                setTodos(oldState => [
+                    ...oldState,
+                    result
+                ]);
+                
+                e.target.value = '';
+            })
+            .catch(err => console.log(err));
+
     }
 
     const deleteTodoListItemClickHandler = (ev, id) => {
@@ -33,9 +43,9 @@ export default function TodoList() {
             let selectedTodo = oldState.find(todo => todo.id == id);
             let selectedTodoIndex = oldState.findIndex(todo => todo.id == id);
             let toggled = { ...selectedTodo, isDone: !selectedTodo.isDone };
-            
+
             return [
-                ...oldState.slice(0, selectedTodoIndex), 
+                ...oldState.slice(0, selectedTodoIndex),
                 toggled,
                 ...oldState.slice(selectedTodoIndex)
             ];
