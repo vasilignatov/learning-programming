@@ -6,6 +6,7 @@ import { API_URL, createTodo } from '../services/todoService.js'
 export default function TodoList() {
 
     const [todos, setTodos] = useState([]);
+    
     useEffect(() => {
         fetch(API_URL)
             .then(res => res.json())
@@ -74,8 +75,8 @@ export default function TodoList() {
                         todo={todo}
                         onDelete={deleteTodoListItemClickHandler}
                         onClick={toggleClickItemHandler}
-                    />)
-                }
+                    />
+                )}
             </ul>
         </>
     );
