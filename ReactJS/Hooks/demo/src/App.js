@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Counter from './components/Counter.js';
 import CharacterList from './components/CharacterList.js';
+import AuthContext from './contexts/authContext.js';
 
 function App() {
 
@@ -20,26 +21,32 @@ function App() {
     }));
     setUser((oldState) => ({
       ...oldState,
-      hobbies: [...user.hobbies, '4']
+      hobbies: [...oldState.hobbies, '4']
     }));
 
   }, []);
 
+
+  const restartCounter = () => {
+    setCount(0);
+  }
+
   return (
-    <div className="App" style={{ textAlign: 'center' }}>
-      <h2>{!name ? 'Loading...' : name}</h2>
+    <AuthContext.Provider value={{count, restartCounter }}>
+      <div className="App" style={{ textAlign: 'center' }}>
+        <h2>{!name ? 'Loading...' : name}</h2>
 
-      {
-        count <= 10
-          ? <Counter count={count} />
-          : null
-      }
-      <button onClick={() => setCount(x => x + 1)} >+</button>
+        {
+          count <= 10
+            ? <Counter />
+            : null
+        }
+        <button onClick={() => setCount(x => x + 1)} >+</button>
 
+        <CharacterList />
 
-      <CharacterList />
-
-    </div>
+      </div>
+    </AuthContext.Provider>
   );
 }
 
