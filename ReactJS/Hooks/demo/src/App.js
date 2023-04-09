@@ -41,6 +41,7 @@ function App() {
             ? <Counter />
             : null
         }
+        
         <button onClick={() => setCount(x => x + 1)} >+</button>
 
         <CharacterList />
