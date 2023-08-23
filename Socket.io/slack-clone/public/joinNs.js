@@ -12,6 +12,7 @@ export default function joinNs(element, nsData) {
         const liEl = document.createElement('li');
         liEl.namespaceId = room.namespaceId;
         liEl.className = 'room';
+        liEl.setAttribute('namespaceId', room.namespaceId);
         const spanEl = document.createElement('span');
 
         if (room.privateRoom) {
@@ -30,9 +31,11 @@ export default function joinNs(element, nsData) {
     console.log(roomNodes);
     Array.from(roomNodes).forEach(elem => {
         elem.addEventListener('click', e => {
-            console.log('Someone clicked on ' + e.target.textContent);
+            // console.log('Someone clicked on ' + e.target.textContent);
             const namespaceId = elem.getAttribute('namespaceId');
-            joinRoom(e.target.innerText, namespaceId);
+            const roomTitle = e.target.textContent.split(' ')[1];
+            console.log(roomTitle, namespaceId);
+            joinRoom(roomTitle, namespaceId);
         });
     });
 

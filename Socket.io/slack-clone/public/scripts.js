@@ -10,7 +10,7 @@ const password = '1';
 const socket = io(baseUrl);
 
 // sockets will be put into this array, in the index of their ns.id
-const nameSpaceSockets = [];
+export const nameSpaceSockets = [];
 const listeners = {
     nsChange: [],
 }

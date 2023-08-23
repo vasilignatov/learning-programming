@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.get('/change-ns', (req, res) => {
     // updated NS array
-    namespaces[0].addRoom(new Room(0, 'Deleted Articles', 0)); 
+    namespaces[0].addRoom(new Room(0, 'Deleted Articles', 0));
     io.of(namespaces[0].endpoint).emit('nsChange', namespaces[0]);
     res.json(namespaces[0]);
 });
@@ -36,7 +36,21 @@ io.on('connection', (socket) => {
 
 namespaces.forEach(ns => {
     io.of(ns.endpoint).on('connection', (socket) => {
-        console.log(socket.id + ' has connected to ' + ns.endpoint);
+        // console.log(socket.id + ' has connected to ' + ns.endpoint);
+
+        socket.on('joinRoom', async (roomTitle, ackCb) => {
+
+            // room title is coming from the client!!! Which is not safe!
+            // AUTH!
+            socket.join(roomTitle);
+
+            // fetch the number of sockets in this room
+            const sockets = await io.of(ns.endpoint).in(roomTitle).fetchSockets();
+            const socketsCount = sockets.length;
+            ackCb({
+                numUsers: socketsCount 
+            });
+        });
     });
 });
 
