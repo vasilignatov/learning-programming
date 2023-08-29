@@ -25,31 +25,35 @@ app.get('/change-ns', (req, res) => {
 io.on('connection', (socket) => {
     console.log(socket.id, 'has connected!');
 
-    socket.emit('messageFromServer', { data: 'Welcome to the socket server!' });
-
-    socket.on('messageFromClient', (data) => {
-        console.log('Data: ', data);
-    });
-
     socket.emit('nsList', namespaces);
 });
 
 namespaces.forEach(ns => {
     io.of(ns.endpoint).on('connection', (socket) => {
-        // console.log(socket.id + ' has connected to ' + ns.endpoint);
-
+        console.log(socket.id + ' has connected to ' + ns.endpoint);
         socket.on('joinRoom', async (roomTitle, ackCb) => {
-
             // room title is coming from the client!!! Which is not safe!
             // AUTH!
             socket.join(roomTitle);
 
             // fetch the number of sockets in this room
             const sockets = await io.of(ns.endpoint).in(roomTitle).fetchSockets();
+            console.log('SOCKETS', sockets);
             const socketsCount = sockets.length;
             ackCb({
-                numUsers: socketsCount 
+                numUsers: socketsCount
             });
+        });
+
+        socket.on('newMessageToRoom', messageObj => {
+           console.log(messageObj);
+            // broadcast this to all connected clients... this room only!
+            // how can we find out what room THIS socket is in?
+            const room = socket.rooms;
+            const currentRoom = [...rooms][1]; //this is a set not arr
+            // send out this messageObj to everyone including the sender
+            io.of(ns.endpoint).in(currentRoom).emit('messageToRoom', messageObj);
+            
         });
     });
 });

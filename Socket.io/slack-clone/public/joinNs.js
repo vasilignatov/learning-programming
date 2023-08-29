@@ -14,6 +14,8 @@ export default function joinNs(element, nsData) {
         liEl.className = 'room';
         liEl.setAttribute('namespaceId', room.namespaceId);
         const spanEl = document.createElement('span');
+        const spanTitile = document.createElement('span');
+        spanTitile.className = 'room-title-el';
 
         if (room.privateRoom) {
             spanEl.textContent = '🔒';
@@ -21,20 +23,19 @@ export default function joinNs(element, nsData) {
             spanEl.textContent = '🌐';
         }
 
-        spanEl.textContent += ' ' + room.roomTitle;
+        spanTitile.textContent = room.roomTitle;
         liEl.appendChild(spanEl);
+        liEl.appendChild(spanTitile);
         roomList.appendChild(liEl);
     });
 
     // add click listeners to each room so the client can tell the server it wants to join!
     const roomNodes = document.querySelectorAll('.room');
-    console.log(roomNodes);
+
     Array.from(roomNodes).forEach(elem => {
         elem.addEventListener('click', e => {
-            // console.log('Someone clicked on ' + e.target.textContent);
             const namespaceId = elem.getAttribute('namespaceId');
-            const roomTitle = e.target.textContent.split(' ')[1];
-            console.log(roomTitle, namespaceId);
+            const roomTitle = e.target.textContent;
             joinRoom(roomTitle, namespaceId);
         });
     });
