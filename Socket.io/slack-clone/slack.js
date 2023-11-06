@@ -22,7 +22,7 @@ app.get('/change-ns', (req, res) => {
     //let everyone know in THIS namespace, that it changed
     io.of(namespaces[0].endpoint).emit('nsChange', namespaces[0]);
     res.json(namespaces[0]);
-})
+});
 
 io.use((socket, next) => {
     const jwt = socket.handshake.query.jwt;
