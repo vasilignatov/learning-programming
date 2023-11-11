@@ -1,7 +1,6 @@
 import logo from './assests/logo.png'
 
 const Header = () => {
-    console.log('HEADER');
    return (
       <nav className="navbar bg-light mb-4 p-0">
             <div className="container">
